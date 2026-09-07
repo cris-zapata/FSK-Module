@@ -8,9 +8,9 @@ FSK is one of the simplest ways to see a core idea in communications made physic
 
 I built this to get the concept working end to end in hardware, not as an endpoint but as a foundation. The intended direction is **Chaos Shift Keying (CSK)** — the chaotic descendant of FSK, where the two fixed tones are replaced by two *chaotic carriers* and the bit is recovered through chaos synchronization at the receiver, with security coming from the carrier being noise-like and unpredictable. That approach was introduced in:
 
-> H. Dedieu, M. P. Kennedy, and M. Hasler, "Chaos shift keying: Modulation and demodulation of a chaotic carrier using self-synchronizing Chua's circuits," *IEEE Trans. Circuits Syst. II*, vol. 40, no. 10, pp. 634–642, Oct. 1993.
+>S. Li, G. Álvarez, Z. Li, and W. A. Halang, "Analog Chaos-based Secure Communications and Cryptanalysis: A Brief Survey," arXiv:0710.5455 (2007). Freely available at https://arxiv.org/abs/0710.5455
 
-This FSK modem is the deterministic groundwork for that trajectory — and it pairs with my separate Chua's-circuit chaotic-oscillator build, which is the carrier source CSK would use.
+This FSK modem is the deterministic groundwork for that trajectory, and it pairs with my separate Chua's-circuit chaotic-oscillator build, which is the carrier source CSK would use.
 
 ## What it does
 
