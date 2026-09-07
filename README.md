@@ -1,4 +1,4 @@
-# Binary FSK Tone Modem
+# Binary FSK Tone Module
 
 A discrete **binary frequency-shift keying (FSK)** link — an encoder that maps a digital bit onto one of two audio tones, and a decoder that recovers the bit and flags whether a valid tone is present. Built as a hands-on way into modulation theory, and as the first step toward exploring **chaotic-carrier secure communication**.
 
@@ -6,7 +6,7 @@ A discrete **binary frequency-shift keying (FSK)** link — an encoder that maps
 
 FSK is one of the simplest ways to see a core idea in communications made physical: information doesn't have to live in a signal's *amplitude*, it can ride on its *frequency*. That property is what makes FSK robust, since a channel can attenuate or distort amplitude while the frequency survives.
 
-I built this to get the concept working end to end in hardware, not as an endpoint but as a foundation. The intended direction is **Chaos Shift Keying (CSK)** — the chaotic descendant of FSK, where the two fixed tones are replaced by two *chaotic carriers* and the bit is recovered through chaos synchronization at the receiver, with security coming from the carrier being noise-like and unpredictable. That approach was introduced in:
+I built this to get the concept working end to end in hardware, not as an endpoint but as a foundation. The intended direction is **Chaos Shift Keying (CSK)**, the chaotic descendant of FSK, where the two fixed tones are replaced by two *chaotic carriers* and the bit is recovered through chaos synchronization at the receiver, with security coming from the carrier being noise-like and unpredictable. That approach was introduced in:
 
 >S. Li, G. Álvarez, Z. Li, and W. A. Halang, "Analog Chaos-based Secure Communications and Cryptanalysis: A Brief Survey," arXiv:0710.5455 (2007). Freely available at https://arxiv.org/abs/0710.5455
 
