@@ -4,13 +4,13 @@ A discrete **binary frequency-shift keying (FSK)** link — an encoder that maps
 
 ## Motivation
 
-FSK is one of the simplest ways to see a core idea in communications made physical: information doesn't have to live in a signal's *amplitude* — it can ride on its *frequency*. That property is what makes FSK robust, since a channel can attenuate or distort amplitude while the frequency survives.
+FSK is one of the simplest ways to see a core idea in communications made physical: information doesn't have to live in a signal's *amplitude*, it can ride on its *frequency*. That property is what makes FSK robust, since a channel can attenuate or distort amplitude while the frequency survives.
 
 I built this to get the concept working end to end in hardware, not as an endpoint but as a foundation. The intended direction is **Chaos Shift Keying (CSK)** — the chaotic descendant of FSK, where the two fixed tones are replaced by two *chaotic carriers* and the bit is recovered through chaos synchronization at the receiver, with security coming from the carrier being noise-like and unpredictable. That approach was introduced in:
 
 >S. Li, G. Álvarez, Z. Li, and W. A. Halang, "Analog Chaos-based Secure Communications and Cryptanalysis: A Brief Survey," arXiv:0710.5455 (2007). Freely available at https://arxiv.org/abs/0710.5455
 
-This FSK modem is the deterministic groundwork for that trajectory, and it pairs with my separate Chua's-circuit chaotic-oscillator build, which is the carrier source CSK would use.
+This FSK module is the deterministic groundwork for that trajectory, and it pairs with my separate Chua's chaotic circuit oscillator build, which is the carrier source CSK would use.
 
 ## What it does
 
@@ -21,7 +21,7 @@ Binary FSK with two symbols:
 | 0 | 450 Hz |
 | 1 | 800 Hz |
 
-The two frequencies are spaced nearly an octave apart — chosen for wide spectral separation so the decoder's frequency discriminator has a large decision margin between symbols. The system runs on ±5 V rails and is TTL-compatible at both the encoder input and the decoder outputs.
+The two frequencies are spaced nearly an octave apart which were chosen for wide spectral separation so the decoder's frequency discriminator has a large decision margin between symbols. The system runs on ±5 V rails and is TTL-compatible at both the encoder input and the decoder outputs.
 
 ![Encoder/decoder schematic](docs/schematic.png)
 
@@ -40,11 +40,11 @@ The clean split is the useful part: E tells you a transmission is happening at a
 
 ## Results
 
-**Simulation (LTspice) — full link works.** End to end, the encoder produces the two tones and the decoder cleanly recovers the bit: E asserts on tone-present, D tracks the input logic through both symbols. This is the reference for correct behavior.
+**Simulation (LTspice).** End to end, the encoder produces the two tones and the decoder cleanly recovers the bit: E asserts on tone-present, D tracks the input logic through both symbols. This is the reference for correct behavior.
 
 ![Decoder D output — simulation](docs/decoder_output_sim.png)
 
-**Hardware — proof of concept, with characterized limitations.** On the breadboard the encoder oscillates and shifts frequency with the input bit, the E detector correctly flags signal-present, and **the D output does recover the bit** — but imperfectly. The hardware decode shows a timing delay relative to the input, some waveform distortion, and a reduced peak-to-peak swing rather than a full rail-to-rail logic level.
+**Hardware proof of concept, with characterized limitations.** On the breadboard the encoder oscillates and shifts frequency with the input bit, the E detector correctly flags signal-present, and **the D output does recover the bit** but imperfectly. The hardware decode shows a timing delay relative to the input, some waveform distortion, and a reduced peak-to-peak swing rather than a full rail-to-rail logic level.
 
 ![Decoder D output — hardware](docs/decoder_output.png)
 
@@ -52,14 +52,14 @@ So the concept is demonstrated in both simulation and on real hardware; the hard
 
 ## Known limitations & tuning direction
 
-- **Op-amp rail behavior (main sim-vs-bench gap).** The simulation uses LT1800 rail-to-rail parts; the breadboard uses TL081, which can't swing within ~1.5 V of each rail on a single-ended output. This directly explains the reduced D swing and why the hardware decode doesn't reach clean 0/5 V TTL. Moving the two output decision stages to a real comparator (LM339/393 open-collector + pull-up) or a rail-to-rail part — while keeping the TL081s in the analog stages — is the fix, alongside re-simulating with the TL081 model so sim matches bench.
-- **Encoder low-tone frequency.** Pre-tuning, the logic-0 tone measured ~322 Hz against the 450 Hz target; since f ∝ 1/RC, lowering the low-state timing resistance to ~0.72× pulls it up to target. The high tone measured ~781 Hz (close).
-- **Discriminator decision margin.** The two tones' detector levels sit close together near the D comparator threshold, so the comparator can idle in its linear region. Widening the ripple-amplitude spread between tones and adding hysteresis on the D comparator sharpens the decision.
+- **Op-amp rail behavior (sim-vs-bench gap).** The simulation uses LT1800 rail-to-rail parts; the breadboard uses TL081, which can't swing within ~1.5 V of each rail on a single-ended output. This directly explains the reduced D swing and why the hardware decode doesn't reach clean 0/5 V TTL. Moving the two output decision stages to a real comparator (LM339/393 open-collector + pull-up) or a rail-to-rail part while keeping the TL081s in the analog stages is the fix, alongside re-simulating with the TL081 model so sim matches bench.
+- **Encoder low-tone frequency.** Pre-tuning, the logic-0 tone measured ~322 Hz against the 450 Hz target; since f is proportional to 1/RC, lowering the low-state timing resistance to ~0.72× pulls it up to target. The high tone measured ~781 Hz (close).
+- **Discriminator decision margin.** The two tones' detector levels sit close together near the D comparator threshold, so the comparator can idle in its linear region. Widening the ripple amplitude spread between tones and adding hysteresis on the D comparator sharpens the decision.
 - **Decode latency.** The detector RC time constants trade ripple-smoothing against response speed; the observed delay is that trade-off, tunable by shortening the detector time constants once the swing issue is resolved.
 
 ## Where this goes
 
-This is the deterministic baseline. The next step is replacing the two fixed sinusoidal tones with **two chaotic carriers** (Chaos Shift Keying, per Dedieu et al. above), generated by a Chua's circuit and recovered through synchronization at the receiver — trading the plainly-visible FSK spectrum for a noise-like, harder-to-intercept one. That connects this modem directly to my Chua's-circuit oscillator build and is the throughline I'm working toward: **understand how a bit rides on frequency → prove I can encode and recover it → make the carrier chaotic for security.**
+This is the deterministic baseline. The next step is replacing the two fixed sinusoidal tones with **two chaotic carriers** (Chaos Shift Keying, per the survey above), generated by a Chua's circuit and recovered through synchronization at the receiver which trades the visible FSK spectrum for a noise-like, harder to intercept one. That connects this module directly to my Chua's chaotic circuit oscillator build and is the throughline I'm working toward: **understand how a bit rides on frequency → prove I can encode and recover it → make the carrier chaotic for security.**
 
 ## Bill of materials (key parts)
 
@@ -76,4 +76,4 @@ Oscillator/switching: 2N7000 (M1) · timing R1 18.2 kΩ, C1 0.1 µF. Shaping (Sa
 
 ## Tools
 
-Hand analysis · LTspice · MATLAB · bench (oscilloscope, function generator, DMM)
+Hand analysis · LTspice · bench (oscilloscope, function generator, Multimeter)
