@@ -1,6 +1,6 @@
 # Binary FSK Tone Module
 
-A discrete **binary frequency-shift keying (FSK)** link — an encoder that maps a digital bit onto one of two audio tones, and a decoder that recovers the bit and flags whether a valid tone is present. Built as a hands-on way into modulation theory, and as the first step toward exploring **chaotic-carrier secure communication**.
+A discrete **binary frequency-shift keying (FSK)** that links an encoder that maps a digital bit onto one of two audio tones, and a decoder that recovers the bit and flags whether a valid tone is present. Built as a hands-on way into modulation theory, and as the first step toward exploring **chaotic-carrier secure communication**.
 
 ## Motivation
 
